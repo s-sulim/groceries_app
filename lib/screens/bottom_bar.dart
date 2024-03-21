@@ -18,11 +18,11 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
 
 int _selectedIndex = 0;
 
- final List _pages = [
-    const HomePage(),
-    const CategoriesScreen(),
-    const CartScreen(),
-    const  UserScreen(),
+ final List <Map<String, dynamic>> _pages = [
+  {'page': const HomePage(), 'title': 'Home'},
+  {'page': const CategoriesScreen(), 'title': 'Categories'},
+  {'page': const CartScreen(), 'title': 'Cart'},
+  {'page': const UserScreen(), 'title': 'My profile'}
   ];
 
   void _selectedPage(int index) {
@@ -35,7 +35,10 @@ int _selectedIndex = 0;
         final themeState = Provider.of<DarkThemeProvider>(context);
         bool _isDark = themeState.getDarkTheme;
     return Scaffold(
-      body: _pages[_selectedIndex],
+      appBar: AppBar(
+        title: Text(_pages[_selectedIndex]['title']),
+      ),
+      body: _pages[_selectedIndex]['page'],
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: _isDark ? Theme.of(context).cardColor : Colors.white,
         unselectedItemColor: _isDark ? Colors.white38 : Colors.black38,
