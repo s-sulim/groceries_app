@@ -17,7 +17,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: Center(child: 
       SwitchListTile(
-        title: Text('Theme'),
+        title: Text('Theme', style:   TextStyle(color: themeState.getDarkTheme ? Colors.white38 : Colors.black38)),
         secondary: Icon(themeState.getDarkTheme ? Icons.dark_mode_outlined : Icons.light_mode_outlined),
         onChanged: (bool value){
             setState(() {

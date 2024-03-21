@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:groceries_app/consts/theme_data.dart';
 import 'package:groceries_app/provider/dark_theme_provider.dart';
-import 'package:groceries_app/screens/home_screen.dart';
+import 'package:groceries_app/screens/bottom_bar.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -40,7 +40,7 @@ void getCurrentAppTheme() async{
           debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
           theme: Styles.themeData(themeProvider.getDarkTheme, context),
-          home: HomePage()
+          home: BottomBarScreen()
         );
       }
     )
