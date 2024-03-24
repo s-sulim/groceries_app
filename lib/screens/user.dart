@@ -14,6 +14,13 @@ class UserScreen extends StatefulWidget {
 }
 
 class _UserScreenState extends State<UserScreen> {
+  final TextEditingController _addressTextController = TextEditingController();
+
+  @override
+  void dispose() {
+   _addressTextController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -42,7 +49,9 @@ class _UserScreenState extends State<UserScreen> {
                 const SizedBox(height: 20),
                 const Divider(thickness: 2),
                 const SizedBox(height: 20),
-                _addListTile(title: 'Address', subtitle: 'My account', icon:IconlyLight.profile, color: themeColor, onPressed: (){}),
+                _addListTile(title: 'Address', subtitle: 'My account', icon:IconlyLight.profile, color: themeColor, onPressed: () async{
+                  await _showEditUserDataDialog();
+                }),
 
                 _addListTile(title: 'Orders', icon:IconlyLight.wallet,color: themeColor, onPressed: (){}),
 
@@ -74,7 +83,23 @@ class _UserScreenState extends State<UserScreen> {
       )
     );
   }
-
+Future <void> _showEditUserDataDialog() async{
+await showDialog(context: context, builder: (context){
+                      return  AlertDialog(
+                        title: const Text('Update your data'),
+                        content: TextField(
+                          onChanged: (value){
+                            print('_addressTextController.text ${_addressTextController.text}');
+                          },
+                          controller: _addressTextController,
+                          maxLines: 1,
+                          decoration: const InputDecoration(hintText: "Your address"),),
+                     
+                     actions: [
+                      TextButton(onPressed: (){}, child: const Text('Submit'),)
+                     ], );
+                    });
+}
   Widget _addListTile({required String title, String? subtitle, required IconData icon, required Color color, required Function onPressed}){
     if  (subtitle != null){
        
