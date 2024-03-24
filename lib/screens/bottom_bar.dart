@@ -35,9 +35,9 @@ int _selectedIndex = 0;
         final themeState = Provider.of<DarkThemeProvider>(context);
         bool _isDark = themeState.getDarkTheme;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_pages[_selectedIndex]['title']),
-      ),
+      // appBar: AppBar(
+      //   title: Text(_pages[_selectedIndex]['title']),
+      // ),
       body: _pages[_selectedIndex]['page'],
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: _isDark ? Theme.of(context).cardColor : Colors.white,
