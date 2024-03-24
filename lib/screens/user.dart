@@ -74,7 +74,9 @@ class _UserScreenState extends State<UserScreen> {
                 value: themeState.getDarkTheme
                 ),
             
-                _addListTile(title: 'Logout', icon:IconlyLight.logout, color: themeColor, onPressed: (){})
+                _addListTile(title: 'Logout', icon:IconlyLight.logout, color: themeColor, onPressed: ()async{
+                  await _showLogoutDialog();
+                })
                  
               ],
             ),
@@ -89,7 +91,7 @@ await showDialog(context: context, builder: (context){
                         title: const Text('Update your data'),
                         content: TextField(
                           onChanged: (value){
-                            print('_addressTextController.text ${_addressTextController.text}');
+                            // print('_addressTextController.text ${_addressTextController.text}');
                           },
                           controller: _addressTextController,
                           maxLines: 1,
@@ -100,29 +102,46 @@ await showDialog(context: context, builder: (context){
                      ], );
                     });
 }
+Future <void> _showLogoutDialog() async{
+await showDialog(context: context, builder: (context){
+                      return  AlertDialog(
+                         title: Row(
+                            children: <Widget>[
+                              Image.asset('assets/images/logout.png', width: 20, height: 20,), // Your icon
+                              const SizedBox(width: 10), // Provides space between the icon and the text
+                              const Expanded(child: Text('Logout?')), // Your text
+                            ],
+                          ),
+                        content: const Text('Are you sure you want to logout?'),
+                     actions: [
+                      TextButton(onPressed: (){}, child: const Text('No', style: TextStyle(color:Colors.red))),
+                      TextButton(onPressed: (){}, child: const Text('Yes', style: TextStyle(color:Colors.green),),)
+                     ], );
+                    });
+}
+
   Widget _addListTile({required String title, String? subtitle, required IconData icon, required Color color, required Function onPressed}){
-    if  (subtitle != null){
-       
-  return ListTile(
-              title: TextWidget(color: color, text: title, textSize: 22, isTitle: true,),
-              subtitle: TextWidget(color: color,
-               text: subtitle, textSize: 18,),
-              leading: Icon(icon, color:color),
-              trailing: Icon(IconlyLight.arrowRight2, color: color),
-              onTap: (){
-                onPressed();
-              }
-            );
-    }
-    else{
- return ListTile(
-              title: TextWidget(color: color, text: title, textSize: 22, isTitle: true,),
-              leading: Icon(icon, color:color),
-              trailing: Icon(IconlyLight.arrowRight2, color: color),
-              onTap: (){
-                onPressed();
-              }
-            );
-    }
+  if  (subtitle != null){
+    return ListTile(
+            title: TextWidget(color: color, text: title, textSize: 22, isTitle: true,),
+            subtitle: TextWidget(color: color,
+              text: subtitle, textSize: 18,),
+            leading: Icon(icon, color:color),
+            trailing: Icon(IconlyLight.arrowRight2, color: color),
+            onTap: (){
+              onPressed();
+            }
+          );
+  }
+  else{
+    return ListTile(
+            title: TextWidget(color: color, text: title, textSize: 22, isTitle: true,),
+            leading: Icon(icon, color:color),
+            trailing: Icon(IconlyLight.arrowRight2, color: color),
+            onTap: (){
+              onPressed();
+            }
+          );
+     }
   }
 }
