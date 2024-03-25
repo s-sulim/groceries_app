@@ -114,8 +114,12 @@ await showDialog(context: context, builder: (context){
                           ),
                         content: const Text('Are you sure you want to logout?'),
                      actions: [
-                      TextButton(onPressed: (){}, child: const Text('No', style: TextStyle(color:Colors.red))),
-                      TextButton(onPressed: (){}, child: const Text('Yes', style: TextStyle(color:Colors.green),),)
+                      TextButton(onPressed: (){
+                        if  (Navigator.canPop(context)){
+                          Navigator.pop(context);
+                        }
+                      }, child: const Text('No', style: TextStyle(color:Colors.red))),
+                      TextButton(onPressed: (){}, child: const Text('Yes', style: TextStyle(color:Colors.cyan),),)
                      ], );
                     });
 }
