@@ -19,27 +19,27 @@ class CategoriesScreen extends StatelessWidget {
 List<Map<String, dynamic>> catInfo = [
     {
       'imgPath': 'assets/images/cat/fruits.png',
-      'catText': 'Fruits',
+      'catText': 'Фрукти',
     },
     {
       'imgPath': 'assets/images/cat/veg.png',
-      'catText': 'Vegetables',
+      'catText': 'Овочі',
     },
     {
       'imgPath': 'assets/images/cat/Spinach.png',
-      'catText': 'Herbs',
+      'catText': 'Трави',
     },
     {
       'imgPath': 'assets/images/cat/nuts.png',
-      'catText': 'Nuts',
+      'catText': 'Горіхи',
     },
     {
       'imgPath': 'assets/images/cat/spices.png',
-      'catText': 'Spices',
+      'catText': 'Спеції',
     },
      {
       'imgPath': 'assets/images/cat/grains.png',
-      'catText': 'Grains',
+      'catText': 'Крупи',
     },
   ];
   @override
