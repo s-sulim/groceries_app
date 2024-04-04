@@ -1,3 +1,4 @@
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:groceries_app/services/utils.dart';
@@ -33,11 +34,11 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Image.asset('assets/images/home/apricot.jpg',
-                      // width: size.width*0.22,
-                      height: size.width * 0.22,
-                      fit: BoxFit.fill,
-                    ),
+                    FancyShimmerImage(imageUrl: 'https://static.vecteezy.com/system/resources/previews/029/228/635/non_2x/apricot-transparent-background-free-png.png',
+                     height: size.height * 0.12,
+                     width: size.width * 0.22,
+                      boxFit: BoxFit.fill,),
+                    
                     Column(
                       children: [
                         TextWidget(
