@@ -1,6 +1,7 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:groceries_app/widgets/price_widget.dart';
 import 'package:groceries_app/widgets/text_widget.dart';
 
@@ -67,7 +68,15 @@ class _FeedsWidgetState extends State<FeedsWidget> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const PriceWidget(),
+                  Flexible(
+                    flex: 4,
+                    child: PriceWidget(
+                      isOnSale: true,
+                      price: 5.99,
+                      salePrice:2.99,
+                      textPrice: _quantityTextController.text,
+                    ),
+                  ),
                   const SizedBox(
                     width: 8,
                   ),
@@ -86,6 +95,7 @@ class _FeedsWidgetState extends State<FeedsWidget> {
                           width: 5,
                         ),
                         Flexible(
+                          flex:4,
                             child: TextFormField(
                           controller: _quantityTextController,
                           key: const ValueKey('10'),
@@ -93,6 +103,13 @@ class _FeedsWidgetState extends State<FeedsWidget> {
                           keyboardType: TextInputType.number,
                           maxLines: 1,
                           enabled: true,
+                          onChanged: (value){
+                            setState(() {
+                            if (value.isEmpty) {
+                              _quantityTextController.text = '1';
+                            } 
+                          });
+                          },
                           inputFormatters: [
                             FilteringTextInputFormatter.allow(
                               RegExp('[0-9.]'),
