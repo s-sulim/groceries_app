@@ -10,7 +10,7 @@ class OnSaleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool _isEmpty = true;
+    bool _isEmpty = false;
     final Color color = Utils(context).color;
     Size size = Utils(context).getScreenSize;
     return Scaffold(
