@@ -38,7 +38,7 @@ void getCurrentAppTheme() async{
       builder: (context,themeProvider, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Flutter Demo',
+          title: 'Groceries app',
           theme: Styles.themeData(themeProvider.getDarkTheme, context),
           home: BottomBarScreen()
         );
