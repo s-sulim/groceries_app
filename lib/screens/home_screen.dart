@@ -1,6 +1,7 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:groceries_app/services/utils.dart';
+import 'package:groceries_app/widgets/on_sale_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -24,20 +25,25 @@ class _HomePageState extends State<HomePage> {
     Size size = Utils(context).getScreenSize;
     return Scaffold(
 
-      body: SizedBox(
-        height: size.height * 0.33,
-        child: Swiper(
-        itemBuilder: (BuildContext context,int index){
-          return Image.asset(_offerImages[index],fit: BoxFit.fill,);
-        },
-        autoplay: true,
-        itemCount: _offerImages.length,
-        pagination: const SwiperPagination(
-          alignment: Alignment.bottomCenter,
-          builder: DotSwiperPaginationBuilder(color:Colors.white, activeColor: Colors.red)
+      body: Column(
+        children: [SizedBox(
+          height: size.height * 0.33,
+          child: Swiper(
+          itemBuilder: (BuildContext context,int index){
+            return Image.asset(_offerImages[index],fit: BoxFit.fill,);
+          },
+          autoplay: true,
+          itemCount: _offerImages.length,
+          pagination: const SwiperPagination(
+            alignment: Alignment.bottomCenter,
+            builder: DotSwiperPaginationBuilder(color:Colors.white, activeColor: Colors.red)
+          ),
         ),
+            ),
+            OnSaleWidget()
+        ]
       ),
-    )
+   
     );
   }
 }

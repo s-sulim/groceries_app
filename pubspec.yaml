@@ -67,6 +67,7 @@ flutter:
     - assets/images/
     - assets/images/cat/
     - assets/images/offers/
+    - assets/images/home/
     # - assets/images/landing
     # - assets/images/offers
 
