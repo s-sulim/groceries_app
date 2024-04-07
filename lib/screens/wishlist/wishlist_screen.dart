@@ -4,6 +4,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:groceries_app/services/global_methods.dart';
 import 'package:groceries_app/services/utils.dart';
 import 'package:groceries_app/widgets/back_widget.dart';
+import 'package:groceries_app/widgets/empty.dart';
 import 'package:groceries_app/widgets/text_widget.dart';
 
 import 'wishlist_widget.dart';
@@ -15,8 +16,14 @@ class WishlistScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color color = Utils(context).color;
+    bool _isEmpty = true;
     Size size = Utils(context).getScreenSize;
-    return Scaffold(
+    return _isEmpty ? const EmptyScreen(
+      title: 'Your wishlist is empty',
+      subtitle: 'Check out what we have for you',
+      buttonText: 'Add a wish now',
+      imagePath: 'assets/images/wishlist.png',
+    ): Scaffold(
         appBar: AppBar(centerTitle: true,
             leading: const BackWidget(),
             automaticallyImplyLeading: false,

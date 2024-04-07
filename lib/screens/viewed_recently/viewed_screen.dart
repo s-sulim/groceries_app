@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:groceries_app/screens/viewed_recently/viewed_widget.dart';
 import 'package:groceries_app/widgets/back_widget.dart';
+import 'package:groceries_app/widgets/empty.dart';
 
 import '../../services/global_methods.dart';
 import '../../services/utils.dart';
@@ -22,8 +23,14 @@ class _ViewedRecentlyScreenState extends State<ViewedRecentlyScreen> {
   @override
   Widget build(BuildContext context) {
     Color color = Utils(context).color;
+    bool _isEmpty = true;
     // Size size = Utils(context).getScreenSize;
-    return Scaffold(
+    return _isEmpty ? const EmptyScreen(
+      title: 'Your history is empty',
+      subtitle: 'You should take a look at our products',
+      buttonText: 'Shop now',
+      imagePath: 'assets/images/history.png',
+    ) :  Scaffold(
       appBar: AppBar(
         actions: [
           IconButton(
