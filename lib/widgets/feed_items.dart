@@ -2,6 +2,8 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:groceries_app/inner_screens/product_details.dart';
+import 'package:groceries_app/services/global_methods.dart';
 import 'package:groceries_app/widgets/price_widget.dart';
 import 'package:groceries_app/widgets/text_widget.dart';
 
@@ -39,7 +41,9 @@ class _FeedsWidgetState extends State<FeedsWidget> {
         borderRadius: BorderRadius.circular(12),
         color: Theme.of(context).cardColor,
         child: InkWell(
-          onTap: () {},
+          onTap: () {
+              GlobalMethods.navigateTo(ctx: context, routeName: ProductDetails.routeName);
+          },
           borderRadius: BorderRadius.circular(12),
           child: Column(children: [
             FancyShimmerImage(
@@ -78,9 +82,10 @@ class _FeedsWidgetState extends State<FeedsWidget> {
                     ),
                   ),
                   const SizedBox(
-                    width: 8,
+                    width: 3,
                   ),
                   Flexible(
+                    flex: 3,
                     child: Row(
                       children: [
                         FittedBox(

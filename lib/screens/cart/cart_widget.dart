@@ -2,6 +2,8 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:groceries_app/inner_screens/product_details.dart';
+import 'package:groceries_app/services/global_methods.dart';
 import 'package:groceries_app/services/utils.dart';
 import 'package:groceries_app/widgets/heart_btn.dart';
 import 'package:groceries_app/widgets/text_widget.dart';
@@ -32,7 +34,9 @@ class _CartWidgetState extends State<CartWidget> {
     final Color color = Utils(context).color;
     Size size = Utils(context).getScreenSize;
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        GlobalMethods.navigateTo(ctx: context, routeName: ProductDetails.routeName);
+      },
       child: Row(
         children: [
           Expanded(
@@ -73,7 +77,15 @@ class _CartWidgetState extends State<CartWidget> {
                           child: Row(
                             children: [
                               _quantityController(
-                                fct: () {},
+                                fct: () {
+                                   setState(() {
+                                   int currVal = int.parse(_quantityTextController.text);
+                                   if (currVal > 1){
+                                    _quantityTextController.text = (currVal - 1).toString();
+                                   }
+                                    
+                                  });
+                                },
                                 color: Colors.red,
                                 icon: CupertinoIcons.minus,
                               ),
@@ -105,7 +117,11 @@ class _CartWidgetState extends State<CartWidget> {
                                 ),
                               ),
                               _quantityController(
-                                fct: () {},
+                                fct: () {
+                                  setState(() {
+                                    _quantityTextController.text = (int.parse(_quantityTextController.text) + 1).toString();
+                                  });
+                                },
                                 color: Colors.green,
                                 icon: CupertinoIcons.plus,
                               )
