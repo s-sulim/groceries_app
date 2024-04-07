@@ -82,7 +82,7 @@ class _UserScreenState extends State<UserScreen> {
                 ),
             
                 _addListTile(title: 'Logout', icon:IconlyLight.logout, color: themeColor, onPressed: ()async{
-                  await _showLogoutDialog();
+                 GlobalMethods.warningDialog(title: 'Log out', subtitle: 'Are you sure you want to log out?', fct: (){}, context: context);
                 })
                  
               ],
@@ -106,27 +106,6 @@ await showDialog(context: context, builder: (context){
                      
                      actions: [
                       TextButton(onPressed: (){}, child: const Text('Submit'),)
-                     ], );
-                    });
-}
-Future <void> _showLogoutDialog() async{
-await showDialog(context: context, builder: (context){
-                      return  AlertDialog(
-                         title: Row(
-                            children: <Widget>[
-                              Image.asset('assets/images/logout.png', width: 20, height: 20,), // Your icon
-                              const SizedBox(width: 10), // Provides space between the icon and the text
-                              const Expanded(child: Text('Logout?')), // Your text
-                            ],
-                          ),
-                        content: const Text('Are you sure you want to logout?'),
-                     actions: [
-                      TextButton(onPressed: (){
-                        if  (Navigator.canPop(context)){
-                          Navigator.pop(context);
-                        }
-                      }, child: const Text('No', style: TextStyle(color:Colors.red))),
-                      TextButton(onPressed: (){}, child: const Text('Yes', style: TextStyle(color:Colors.cyan),),)
                      ], );
                     });
 }
