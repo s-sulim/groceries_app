@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:groceries_app/provider/dark_theme_provider.dart';
+import 'package:groceries_app/screens/orders/orders_screen.dart';
 import 'package:groceries_app/screens/wishlist/wishlist_screen.dart';
 import 'package:groceries_app/services/global_methods.dart';
 import 'package:groceries_app/widgets/text_widget.dart';
@@ -55,7 +56,9 @@ class _UserScreenState extends State<UserScreen> {
                   await _showEditUserDataDialog();
                 }),
 
-                _addListTile(title: 'Orders', icon:IconlyLight.wallet,color: themeColor, onPressed: (){}),
+                _addListTile(title: 'Orders', icon:IconlyLight.wallet,color: themeColor, onPressed: (){
+                  GlobalMethods.navigateTo(ctx: context, routeName: OrdersScreen.routeName);
+                }),
 
                 _addListTile(title: 'Wishlist', icon:IconlyLight.heart,color: themeColor, onPressed: (){
                   
