@@ -5,7 +5,10 @@ import 'package:groceries_app/screens/cart/cart_screen.dart';
 import 'package:groceries_app/screens/categories.dart';
 import 'package:groceries_app/screens/home_screen.dart';
 import 'package:groceries_app/screens/user.dart';
+import 'package:groceries_app/widgets/text_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:badges/badges.dart' as badge;
+
 
 class BottomBarScreen extends StatefulWidget {
   const BottomBarScreen({super.key});
@@ -57,12 +60,28 @@ int _selectedIndex = 1;
           icon: Icon(_selectedIndex == 1 ? IconlyBold.category : IconlyLight.category),
           label: 'Categories'),
            BottomNavigationBarItem(
-          icon: Icon(_selectedIndex == 2 ? IconlyBold.buy :IconlyLight.buy),
-          label: 'Cart'),
-           BottomNavigationBarItem(
-          icon: Icon(_selectedIndex == 3 ? IconlyBold.user2 :IconlyLight.user2),
-          label: 'User'),
-      ]),
-    );
+               label: 'Cart',
+          icon: badge.Badge(
+            badgeAnimation: const badge.BadgeAnimation.slide(),
+            badgeStyle: badge.BadgeStyle(
+              shape: badge.BadgeShape.circle,
+              badgeColor: Colors.blue,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            position: badge.BadgePosition.topEnd(top: -7, end: -7),
+            badgeContent: FittedBox(
+                child: TextWidget(
+                    text: '3',
+                    color: Colors.white,
+                    textSize: 15)),
+            child: Icon(
+                _selectedIndex == 2 ? IconlyBold.buy : IconlyLight.buy),)),
+                      
+          BottomNavigationBarItem(
+            icon: Icon(
+                _selectedIndex == 3 ? IconlyBold.user2 : IconlyLight.user2),
+            label: "User", )]),
+         
+          );
   }
 }
