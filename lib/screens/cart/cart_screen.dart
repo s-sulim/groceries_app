@@ -10,7 +10,7 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color color = Utils(context).color;
-    Size size = Utils(context).getScreenSize;
+    // Size size = Utils(context).getScreenSize;
     return Scaffold(
       appBar: AppBar(
           elevation: 0,

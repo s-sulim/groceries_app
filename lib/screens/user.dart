@@ -3,6 +3,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:groceries_app/provider/dark_theme_provider.dart';
+import 'package:groceries_app/screens/wishlist/wishlist_screen.dart';
+import 'package:groceries_app/services/global_methods.dart';
 import 'package:groceries_app/widgets/text_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -55,9 +57,14 @@ class _UserScreenState extends State<UserScreen> {
 
                 _addListTile(title: 'Orders', icon:IconlyLight.wallet,color: themeColor, onPressed: (){}),
 
-                _addListTile(title: 'Wishlist', icon:IconlyLight.heart,color: themeColor, onPressed: (){}),
+                _addListTile(title: 'Wishlist', icon:IconlyLight.heart,color: themeColor, onPressed: (){
+                  
+                  GlobalMethods.navigateTo(ctx: context, routeName: WishlistScreen.routeName);
+                }),
 
-                _addListTile(title: 'Viewed', icon:IconlyLight.discovery,color: themeColor, onPressed: (){}),
+                _addListTile(title: 'Viewed', icon:IconlyLight.discovery,color: themeColor, onPressed: (){
+
+                }),
 
                 _addListTile(title: 'Forgot my password', icon:IconlyLight.unlock,color: themeColor, onPressed: (){}),
             
