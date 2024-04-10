@@ -30,6 +30,7 @@ class _ViewedRecentlyScreenState extends State<ViewedRecentlyScreen> {
       subtitle: 'You should take a look at our products',
       buttonText: 'Shop now',
       imagePath: 'assets/images/history.png',
+    // ignore: dead_code
     ) :  Scaffold(
       appBar: AppBar(
         actions: [

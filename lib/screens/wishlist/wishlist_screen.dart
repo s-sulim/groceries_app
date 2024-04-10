@@ -17,12 +17,14 @@ class WishlistScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final Color color = Utils(context).color;
     bool _isEmpty = true;
+    // ignore: unused_local_variable
     Size size = Utils(context).getScreenSize;
     return _isEmpty ? const EmptyScreen(
       title: 'Your wishlist is empty',
-      subtitle: 'Check out what we have for you',
+      subtitle: 'Check ou what we have for you',
       buttonText: 'Add a wish now',
       imagePath: 'assets/images/wishlist.png',
+    // ignore: dead_code
     ): Scaffold(
         appBar: AppBar(centerTitle: true,
             leading: const BackWidget(),

@@ -26,6 +26,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
       subtitle: 'Try to order something',
       buttonText: 'Shop now',
       imagePath: 'assets/images/cart.png',
+    // ignore: dead_code
     ) : Scaffold(
         appBar: AppBar(
           leading: const BackWidget(),

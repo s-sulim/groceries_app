@@ -19,6 +19,7 @@ class CartScreen extends StatelessWidget {
       subtitle: 'Maybe add  some stuff in here',
       buttonText: 'Shop now',
       imagePath: 'assets/images/cart.png',
+    // ignore: dead_code
     ) : Scaffold(
       appBar: AppBar(
           elevation: 0,

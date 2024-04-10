@@ -1,4 +1,5 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -11,14 +12,16 @@ import '../services/utils.dart';
 import 'heart_btn.dart';
 
 class FeedsWidget extends StatefulWidget {
-  const FeedsWidget({Key? key}) : super(key: key);
-
+  const FeedsWidget({Key? key, required this.imageUrl, required this.title}) : super(key: key);
+  final String imageUrl, title;
   @override
   State<FeedsWidget> createState() => _FeedsWidgetState();
 }
 
 class _FeedsWidgetState extends State<FeedsWidget> {
   final _quantityTextController = TextEditingController();
+
+    
   @override
   void initState() {
     _quantityTextController.text = '1';
@@ -33,6 +36,7 @@ class _FeedsWidgetState extends State<FeedsWidget> {
 
   @override
   Widget build(BuildContext context) {
+
     final Color color = Utils(context).color;
     Size size = Utils(context).getScreenSize;
     return Padding(
@@ -47,7 +51,7 @@ class _FeedsWidgetState extends State<FeedsWidget> {
           borderRadius: BorderRadius.circular(12),
           child: Column(children: [
             FancyShimmerImage(
-              imageUrl: 'https://static.vecteezy.com/system/resources/previews/029/228/635/non_2x/apricot-transparent-background-free-png.png',
+              imageUrl: widget.imageUrl,
               height: size.width * 0.21,
               width: size.width * 0.2,
               boxFit: BoxFit.fill,
@@ -57,13 +61,17 @@ class _FeedsWidgetState extends State<FeedsWidget> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  TextWidget(
-                    text: 'Title',
-                    color: color,
-                    textSize: 20,
-                    isTitle: true,
+                  Flexible(
+                    flex:3,
+                    child: TextWidget(
+                      text: widget.title,
+                      color: color,
+                      maxLines: 1,
+                      textSize: 18,
+                      isTitle: true,
+                    ),
                   ),
-                  const HeartBTN(),
+                  Flexible(flex:1, child: const HeartBTN()),
                 ],
               ),
             ),

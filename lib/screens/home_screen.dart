@@ -1,6 +1,7 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:groceries_app/consts/constss.dart';
 import 'package:groceries_app/inner_screens/feeds_screen.dart';
 import 'package:groceries_app/inner_screens/on_sale_screen.dart';
 import 'package:groceries_app/services/global_methods.dart';
@@ -17,12 +18,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final List<String> _offerImages = [
-    'assets/images/offers/Offer1.jpg',
-    'assets/images/offers/Offer2.jpg',
-    'assets/images/offers/Offer3.jpg',
-    'assets/images/offers/Offer4.jpg'
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -40,12 +35,12 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Swiper(
                 itemBuilder: (BuildContext context, int index) {
                   return Image.asset(
-                    _offerImages[index],
+                   Constss.offerImages[index],
                     fit: BoxFit.fill,
                   );
                 },
                 autoplay: true,
-                itemCount: _offerImages.length,
+                itemCount:  Constss.offerImages.length,
                 pagination: const SwiperPagination(
                     alignment: Alignment.bottomCenter,
                     builder: DotSwiperPaginationBuilder(
@@ -146,9 +141,9 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: EdgeInsets.zero,
               // crossAxisSpacing: 10,
               childAspectRatio: size.width / (size.height * 0.59),
-              children: List.generate(4, (index) {
-                return const FeedsWidget();
-              }),
+              children: List.generate(Constss.productsList.length < 4 ? Constss.productsList.length : 4, (index) {
+                return FeedsWidget(imageUrl: Constss.productsList[index].imageUrl, title: Constss.productsList[index].title,);
+            }),
             )
           ],
         ),
