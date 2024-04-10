@@ -4,6 +4,7 @@ import 'package:groceries_app/inner_screens/feeds_screen.dart';
 import 'package:groceries_app/inner_screens/on_sale_screen.dart';
 import 'package:groceries_app/inner_screens/product_details.dart';
 import 'package:groceries_app/provider/dark_theme_provider.dart';
+import 'package:groceries_app/providers/products_provider.dart';
 import 'package:groceries_app/screens/auth/forgot_password_screen.dart';
 import 'package:groceries_app/screens/auth/login_screen.dart';
 import 'package:groceries_app/screens/auth/register_screen.dart';
@@ -45,7 +46,10 @@ class _MyAppState extends State<MyApp> {
       providers: [
         ChangeNotifierProvider(create: (_) {
           return themeChangeProvider;
-        })
+        }),
+         ChangeNotifierProvider(create: (_) =>
+           ProductsProvider(),
+        )
       ],
       child:
           Consumer<DarkThemeProvider>(builder: (context, themeProvider, child) {

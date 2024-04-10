@@ -4,9 +4,12 @@ import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:groceries_app/consts/constss.dart';
 import 'package:groceries_app/inner_screens/feeds_screen.dart';
 import 'package:groceries_app/inner_screens/on_sale_screen.dart';
+import 'package:groceries_app/models/products_model.dart';
+import 'package:groceries_app/providers/products_provider.dart' as pp;
 import 'package:groceries_app/services/global_methods.dart';
 import 'package:groceries_app/services/utils.dart';
 import 'package:groceries_app/widgets/text_widget.dart';
+import 'package:provider/provider.dart';
 import '../widgets/feed_items.dart';
 import '../widgets/on_sale_widget.dart';
 
@@ -23,8 +26,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final Utils utils = Utils(context);
     // final themeState = utils.getTheme;
+    final ProductsProvider = Provider.of<pp.ProductsProvider>(context);
+    List<ProductModel> allProducts = ProductsProvider.getProducts;
+
     final Color color = Utils(context).color;
     Size size = utils.getScreenSize;
+    final productProviders = Provider.of<pp.ProductsProvider>(context);
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -141,10 +148,12 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: EdgeInsets.zero,
               // crossAxisSpacing: 10,
               childAspectRatio: size.width / (size.height * 0.59),
-              children: List.generate(Constss.productsList.length < 4 ? Constss.productsList.length : 4, (index) {
-                return FeedsWidget(imageUrl: Constss.productsList[index].imageUrl, title: Constss.productsList[index].title,);
-            }),
-            )
+              children: List.generate(allProducts.length < 4 ? allProducts.length : 4, (index) {
+                return ChangeNotifierProvider.value(
+                  value: allProducts[index],
+                  child: FeedsWidget());
+              }
+            ))
           ],
         ),
       ),

@@ -4,16 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:groceries_app/inner_screens/product_details.dart';
+import 'package:groceries_app/models/products_model.dart';
 import 'package:groceries_app/services/global_methods.dart';
 import 'package:groceries_app/widgets/price_widget.dart';
 import 'package:groceries_app/widgets/text_widget.dart';
+import 'package:provider/provider.dart';
 
 import '../services/utils.dart';
 import 'heart_btn.dart';
 
 class FeedsWidget extends StatefulWidget {
-  const FeedsWidget({Key? key, required this.imageUrl, required this.title}) : super(key: key);
-  final String imageUrl, title;
+  const FeedsWidget({Key? key}) : super(key: key);
   @override
   State<FeedsWidget> createState() => _FeedsWidgetState();
 }
@@ -39,6 +40,7 @@ class _FeedsWidgetState extends State<FeedsWidget> {
 
     final Color color = Utils(context).color;
     Size size = Utils(context).getScreenSize;
+    final productModel = Provider.of<ProductModel>(context);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Material(
@@ -51,7 +53,7 @@ class _FeedsWidgetState extends State<FeedsWidget> {
           borderRadius: BorderRadius.circular(12),
           child: Column(children: [
             FancyShimmerImage(
-              imageUrl: widget.imageUrl,
+              imageUrl: productModel.imageUrl,
               height: size.width * 0.21,
               width: size.width * 0.2,
               boxFit: BoxFit.fill,
@@ -64,7 +66,7 @@ class _FeedsWidgetState extends State<FeedsWidget> {
                   Flexible(
                     flex:3,
                     child: TextWidget(
-                      text: widget.title,
+                      text: productModel.title,
                       color: color,
                       maxLines: 1,
                       textSize: 18,
@@ -83,9 +85,9 @@ class _FeedsWidgetState extends State<FeedsWidget> {
                   Flexible(
                     flex: 4,
                     child: PriceWidget(
-                      isOnSale: true,
-                      price: 5.99,
-                      salePrice:2.99,
+                      isOnSale: productModel.isOnSale,
+                      price: productModel.price,
+                      salePrice:productModel.salePrice,
                       textPrice: _quantityTextController.text,
                     ),
                   ),
@@ -98,7 +100,7 @@ class _FeedsWidgetState extends State<FeedsWidget> {
                       children: [
                         FittedBox(
                           child: TextWidget(
-                            text: 'KG',
+                            text: productModel.isPiece ? "PC" : "KG",
                             color: color,
                             textSize: 18,
                             isTitle: true,
