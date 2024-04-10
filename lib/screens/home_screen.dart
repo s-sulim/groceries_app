@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // final themeState = utils.getTheme;
     final ProductsProvider = Provider.of<pp.ProductsProvider>(context);
     List<ProductModel> allProducts = ProductsProvider.getProducts;
-
+    List<ProductModel> productsOnSale = ProductsProvider.getOnSaleProducts;
     final Color color = Utils(context).color;
     Size size = utils.getScreenSize;
     final productProviders = Provider.of<pp.ProductsProvider>(context);
@@ -102,10 +102,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: SizedBox(
                     height: size.height * 0.24,
                     child: ListView.builder(
-                        itemCount: 10,
+                        itemCount: productsOnSale.length < 10 ? productsOnSale.length : 10,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (ctx, index) {
-                          return const OnSaleWidget();
+                          return ChangeNotifierProvider.value(
+                            value: productsOnSale[index],
+                            child: const OnSaleWidget());
                         }),
                   ),
                 ),
