@@ -3,7 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:groceries_app/models/products_model.dart';
+import 'package:groceries_app/providers/products_provider.dart' as pp;
 import 'package:groceries_app/widgets/heart_btn.dart';
+import 'package:provider/provider.dart';
 
 import '../services/utils.dart';
 import '../widgets/text_widget.dart';
@@ -31,7 +34,11 @@ class _ProductDetailsState extends State<ProductDetails> {
   Widget build(BuildContext context) {
     Size size = Utils(context).getScreenSize;
     final Color color = Utils(context).color;
-
+    final ProductsProvider = Provider.of<pp.ProductsProvider>(context);
+    final productId = ModalRoute.of(context)!.settings.arguments as String;
+    final ProductModel currentProduct = ProductsProvider.findById(productId);
+    final double realPrice = currentProduct.isOnSale ? currentProduct.salePrice : currentProduct.price;
+    final double totalPrice = realPrice * int.parse(_quantityTextController.text);
     return Scaffold(
       appBar: AppBar(
           leading: InkWell(
@@ -50,7 +57,7 @@ class _ProductDetailsState extends State<ProductDetails> {
         Flexible(
           flex: 2,
           child: FancyShimmerImage(
-            imageUrl: 'https://static.vecteezy.com/system/resources/previews/029/228/635/non_2x/apricot-transparent-background-free-png.png',
+            imageUrl: currentProduct.imageUrl,
             boxFit: BoxFit.scaleDown,
             width: size.width,
             // height: screenHeight * .4,
@@ -76,7 +83,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                     children: [
                       Flexible(
                         child: TextWidget(
-                          text: 'title',
+                          text: currentProduct.title,
                           color: color,
                           textSize: 25,
                           isTitle: true,
@@ -93,13 +100,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       TextWidget(
-                        text: '\$2.59',
+                        text: '\$${realPrice.toStringAsFixed(2)}',
                         color: Colors.green,
                         textSize: 22,
                         isTitle: true,
                       ),
                       TextWidget(
-                        text: '/Kg',
+                        text: '/${currentProduct.isPiece ? 'PC' : 'KG'}',
                         color: color,
                         textSize: 12,
                         isTitle: false,
@@ -108,9 +115,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                         width: 10,
                       ),
                       Visibility(
-                        visible: true,
+                        visible: currentProduct.isOnSale,
                         child: Text(
-                          '\$3.9',
+                          '\$${currentProduct.price.toStringAsFixed(2)}',
                           style: TextStyle(
                               fontSize: 15,
                               color: color,
@@ -231,13 +238,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                               child: Row(
                                 children: [
                                   TextWidget(
-                                    text: '\$2.59/',
+                                    text: '\$${totalPrice.toStringAsFixed(2)}',
                                     color: color,
                                     textSize: 20,
                                     isTitle: true,
                                   ),
                                   TextWidget(
-                                    text: '${_quantityTextController.text}Kg',
+                                    text: '\/${_quantityTextController.text}Kg',
                                     color: color,
                                     textSize: 16,
                                     isTitle: false,
