@@ -7,6 +7,7 @@ import 'package:groceries_app/inner_screens/product_details.dart';
 import 'package:groceries_app/provider/dark_theme_provider.dart';
 import 'package:groceries_app/providers/cart_provider.dart';
 import 'package:groceries_app/providers/products_provider.dart';
+import 'package:groceries_app/providers/viewed_provider.dart';
 import 'package:groceries_app/providers/wishlist_provider.dart';
 import 'package:groceries_app/screens/auth/forgot_password_screen.dart';
 import 'package:groceries_app/screens/auth/login_screen.dart';
@@ -58,6 +59,9 @@ class _MyAppState extends State<MyApp> {
         ),
         ChangeNotifierProvider(create: (_) =>
            WishlistProvider(),
+        ),
+          ChangeNotifierProvider(create: (_) =>
+           ViewedProdProvider(),
         )
       ],
       child:

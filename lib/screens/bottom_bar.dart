@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:groceries_app/provider/dark_theme_provider.dart';
+import 'package:groceries_app/providers/cart_provider.dart';
 import 'package:groceries_app/screens/cart/cart_screen.dart';
 import 'package:groceries_app/screens/categories.dart';
 import 'package:groceries_app/screens/home_screen.dart';
@@ -37,6 +38,8 @@ int _selectedIndex = 0;
   Widget build(BuildContext context) {
         final themeState = Provider.of<DarkThemeProvider>(context);
         bool _isDark = themeState.getDarkTheme;
+        final cartProvider = Provider.of<CartProvider>(context);
+        final cartItemsList = cartProvider.getCartItems.values.toList().reversed.toList();
     return Scaffold(
       // appBar: AppBar(
       //   title: Text(_pages[_selectedIndex]['title']),
@@ -61,7 +64,7 @@ int _selectedIndex = 0;
           label: 'Categories'),
            BottomNavigationBarItem(
                label: 'Cart',
-          icon: badge.Badge(
+          icon: cartItemsList.isEmpty ?  Icon( _selectedIndex == 2 ? IconlyBold.buy : IconlyLight.buy) : badge.Badge(
             badgeAnimation: const badge.BadgeAnimation.slide(),
             badgeStyle: badge.BadgeStyle(
               shape: badge.BadgeShape.circle,
@@ -71,7 +74,7 @@ int _selectedIndex = 0;
             position: badge.BadgePosition.topEnd(top: -7, end: -7),
             badgeContent: FittedBox(
                 child: TextWidget(
-                    text: '3',
+                    text: cartItemsList.length.toString(),
                     color: Colors.white,
                     textSize: 15)),
             child: Icon(

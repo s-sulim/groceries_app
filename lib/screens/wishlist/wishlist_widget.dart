@@ -20,12 +20,12 @@ class WishlistWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final Color color = Utils(context).color;
     Size size = Utils(context).getScreenSize;
-      final productsProvider = Provider.of<pp.ProductsProvider>(context);
-         final WishlistModel = Provider.of<wm.WishlistModel>(context);
-      final currentProduct = productsProvider.findById(WishlistModel.productId);
-        final wishlistProvider = Provider.of<wp.WishlistProvider>(context);
-      bool? _isInWishlist = wishlistProvider.getWishlistItems.containsKey(currentProduct.id);
-      final double realPrice = currentProduct.isOnSale ? currentProduct.salePrice : currentProduct.price;
+    final productsProvider = Provider.of<pp.ProductsProvider>(context);
+    final WishlistModel = Provider.of<wm.WishlistModel>(context);
+    final currentProduct = productsProvider.findById(WishlistModel.productId);
+    final wishlistProvider = Provider.of<wp.WishlistProvider>(context);
+    bool? _isInWishlist = wishlistProvider.getWishlistItems.containsKey(currentProduct.id);
+    final double realPrice = currentProduct.isOnSale ? currentProduct.salePrice : currentProduct.price;
     // final WishlistProvider = Provider.of<wp.WishlistProvider>(context);
  
 // bool? _isInWishlist = WishlistProvider.getWishlistItems.containsKey(productModel.id);
