@@ -28,6 +28,9 @@ await showDialog(context: context, builder: (context){
                       }, child: const Text('Cancel', style: TextStyle(color:Colors.red))),
                       TextButton(onPressed: (){
                         fct();
+                         if  (Navigator.canPop(context)){
+                          Navigator.pop(context);
+                        }
                       }, child: const Text('OK', style: TextStyle(color:Colors.cyan),),)
                      ], );
                     });

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:groceries_app/models/products_model.dart';
+import 'package:groceries_app/providers/cart_provider.dart';
 import 'package:groceries_app/providers/products_provider.dart' as pp;
 import 'package:groceries_app/widgets/heart_btn.dart';
 import 'package:provider/provider.dart';
@@ -34,11 +35,13 @@ class _ProductDetailsState extends State<ProductDetails> {
   Widget build(BuildContext context) {
     Size size = Utils(context).getScreenSize;
     final Color color = Utils(context).color;
+      final cartProvider = Provider.of<CartProvider>(context);
     final ProductsProvider = Provider.of<pp.ProductsProvider>(context);
     final productId = ModalRoute.of(context)!.settings.arguments as String;
     final ProductModel currentProduct = ProductsProvider.findById(productId);
     final double realPrice = currentProduct.isOnSale ? currentProduct.salePrice : currentProduct.price;
     final double totalPrice = realPrice * int.parse(_quantityTextController.text);
+    bool? _isInCart = cartProvider.getCartItems.containsKey(currentProduct.id);
     return Scaffold(
       appBar: AppBar(
           leading: InkWell(
@@ -263,12 +266,17 @@ class _ProductDetailsState extends State<ProductDetails> {
                           color: Colors.green,
                           borderRadius: BorderRadius.circular(10),
                           child: InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              if  (_isInCart){
+                                  return;
+                                }
+                                cartProvider.addToCart(productId: currentProduct.id, quantity: int.parse(_quantityTextController.text));
+                            },
                             borderRadius: BorderRadius.circular(10),
                             child: Padding(
                                 padding: const EdgeInsets.all(12.0),
                                 child: TextWidget(
-                                    text: 'Add to cart',
+                                    text: _isInCart ? 'In cart' : 'Add to cart',
                                     color: Colors.white,
                                     textSize: 18)),
                           ),

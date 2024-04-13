@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:groceries_app/providers/cart_provider.dart';
+import 'package:groceries_app/providers/cart_provider.dart' as cp;
 import 'package:groceries_app/screens/cart/cart_widget.dart';
 import 'package:groceries_app/widgets/empty.dart';
 import 'package:groceries_app/services/global_methods.dart';
 import 'package:groceries_app/widgets/text_widget.dart';
+import 'package:provider/provider.dart';
 import '../../services/utils.dart';
 
 class CartScreen extends StatelessWidget {
@@ -13,8 +16,9 @@ class CartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final Color color = Utils(context).color;
     // Size size = Utils(context).getScreenSize;
-    bool _isEmpty = true;
-    return _isEmpty ? const EmptyScreen(
+   final cartProvider = Provider.of<cp.CartProvider>(context);
+   final cartItemsList = cartProvider.getCartItems.values.toList().reversed.toList();
+    return cartItemsList.isEmpty ? const EmptyScreen(
       title: 'Your cart is empty',
       subtitle: 'Maybe add  some stuff in here',
       buttonText: 'Shop now',
@@ -25,7 +29,7 @@ class CartScreen extends StatelessWidget {
           elevation: 0,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           title: TextWidget(
-            text: 'Cart (2)',
+            text: 'Cart (${cartItemsList.length})',
             color: color,
             isTitle: true,
             textSize: 22,
@@ -33,7 +37,9 @@ class CartScreen extends StatelessWidget {
           actions: [
             IconButton(
               onPressed: () {
-                GlobalMethods.warningDialog(title: 'Empty your cart?', subtitle: 'U sure?', fct: (){}, context: context);
+                GlobalMethods.warningDialog(title: 'Empty your cart?', subtitle: 'U sure?', fct: (){
+                  cartProvider.clear();
+                }, context: context);
               },
               icon: Icon(
                 IconlyBroken.delete,
@@ -46,9 +52,11 @@ class CartScreen extends StatelessWidget {
           _checkout(ctx: context),
           Expanded(
             child: ListView.builder(
-              itemCount: 10,
+              itemCount: cartItemsList.length,
               itemBuilder: (ctx, index) {
-                return CartWidget();
+                return ChangeNotifierProvider.value(
+                  value: cartItemsList[index],
+                  child: CartWidget(quantity: cartItemsList[index].quantity));
               },
             ),
           ),
