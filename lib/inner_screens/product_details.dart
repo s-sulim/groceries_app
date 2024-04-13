@@ -6,6 +6,7 @@ import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:groceries_app/models/products_model.dart';
 import 'package:groceries_app/providers/cart_provider.dart';
 import 'package:groceries_app/providers/products_provider.dart' as pp;
+import 'package:groceries_app/providers/wishlist_provider.dart' as wp;
 import 'package:groceries_app/widgets/heart_btn.dart';
 import 'package:provider/provider.dart';
 
@@ -37,10 +38,14 @@ class _ProductDetailsState extends State<ProductDetails> {
     final Color color = Utils(context).color;
       final cartProvider = Provider.of<CartProvider>(context);
     final ProductsProvider = Provider.of<pp.ProductsProvider>(context);
+    
     final productId = ModalRoute.of(context)!.settings.arguments as String;
     final ProductModel currentProduct = ProductsProvider.findById(productId);
     final double realPrice = currentProduct.isOnSale ? currentProduct.salePrice : currentProduct.price;
     final double totalPrice = realPrice * int.parse(_quantityTextController.text);
+    final WishlistProvider = Provider.of<wp.WishlistProvider>(context);
+bool? _isInWishlist = WishlistProvider.getWishlistItems.containsKey(currentProduct.id);
+
     bool? _isInCart = cartProvider.getCartItems.containsKey(currentProduct.id);
     return Scaffold(
       appBar: AppBar(
@@ -92,7 +97,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                           isTitle: true,
                         ),
                       ),
-                      const HeartBTN(),
+                    HeartBTN(productId: currentProduct.id, isInwishlist: _isInWishlist)
                     ],
                   ),
                 ),

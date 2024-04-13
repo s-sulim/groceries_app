@@ -7,6 +7,7 @@ import 'package:groceries_app/models/cart_model.dart' as cm;
 import 'package:groceries_app/models/products_model.dart' ;
 import 'package:groceries_app/providers/cart_provider.dart';
 import 'package:groceries_app/providers/products_provider.dart' as pp;
+import 'package:groceries_app/providers/wishlist_provider.dart' as wp;
 import 'package:groceries_app/services/global_methods.dart';
 import 'package:groceries_app/services/utils.dart';
 import 'package:groceries_app/widgets/heart_btn.dart';
@@ -37,12 +38,16 @@ class _CartWidgetState extends State<CartWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final Color color = Utils(context).color;
-    Size size = Utils(context).getScreenSize;
-       final cartProvider = Provider.of<CartProvider>(context);
-    final ProductsProvider = Provider.of<pp.ProductsProvider>(context);
-    final CartModel = Provider.of<cm.CartModel>(context);
-    final currentProduct = ProductsProvider.findById(CartModel.productId);
+final Color color = Utils(context).color;
+Size size = Utils(context).getScreenSize;
+final cartProvider = Provider.of<CartProvider>(context);
+final ProductsProvider = Provider.of<pp.ProductsProvider>(context);
+final CartModel = Provider.of<cm.CartModel>(context);
+final currentProduct = ProductsProvider.findById(CartModel.productId);
+final WishlistProvider = Provider.of<wp.WishlistProvider>(context);
+bool? _isInWishlist = WishlistProvider.getWishlistItems.containsKey(currentProduct.id);
+
+
       final double realPrice = currentProduct.isOnSale ? currentProduct.salePrice : currentProduct.price;
     final double totalPrice = realPrice * int.parse(_quantityTextController.text);
 
@@ -164,7 +169,7 @@ class _CartWidgetState extends State<CartWidget> {
                           const SizedBox(
                             height: 5,
                           ),
-                          const HeartBTN(),
+                         HeartBTN(productId: currentProduct.id, isInwishlist: _isInWishlist),
                           TextWidget(
                             text: '\$${realPrice.toStringAsFixed(2)}',
                             color: color,

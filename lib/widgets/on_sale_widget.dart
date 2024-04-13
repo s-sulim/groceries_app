@@ -6,7 +6,9 @@ import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:groceries_app/inner_screens/product_details.dart';
 import 'package:groceries_app/models/products_model.dart';
 import 'package:groceries_app/providers/cart_provider.dart' as cp;
+import 'package:groceries_app/providers/wishlist_provider.dart' as wp;
 import 'package:groceries_app/services/utils.dart';
+import 'package:groceries_app/widgets/heart_btn.dart';
 import 'package:groceries_app/widgets/text_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -24,10 +26,13 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final Color color = Utils(context).color;
-   final productModel = Provider.of<ProductModel>(context);
-       final CartProvider = Provider.of<cp.CartProvider>(context);
-        bool? _isInCart = CartProvider.getCartItems.containsKey(productModel.id);
+final Color color = Utils(context).color;
+final productModel = Provider.of<ProductModel>(context);
+final CartProvider = Provider.of<cp.CartProvider>(context);
+bool? _isInCart = CartProvider.getCartItems.containsKey(productModel.id);
+final WishlistProvider = Provider.of<wp.WishlistProvider>(context);
+bool? _isInWishlist = WishlistProvider.getWishlistItems.containsKey(productModel.id);
+
     // final theme = Utils(context).getTheme;
     Size size = Utils(context).getScreenSize;
     return Material(
@@ -78,12 +83,9 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
                               onTap: () {
                                 print('print heart button is pressed');
                               },
-                              child: Icon(
-                                IconlyLight.heart,
-                                size: 22,
-                                color: color,
-                              ),
+                              child:   HeartBTN(productId: productModel.id, isInwishlist: _isInWishlist),
                             ),
+                          
                           ],
                         ),
                       ],
