@@ -157,8 +157,8 @@ bool? _isInWishlist = WishlistProvider.getWishlistItems.containsKey(currentProdu
                       child: Column(
                         children: [
                           InkWell(
-                            onTap: () {
-                              cartProvider.removeFromCart(CartModel.productId);
+                            onTap: () async {
+                            await  cartProvider.removeOneItem(cartId: CartModel.id, productId: CartModel.productId, quantity: CartModel.quantity);
                             },
                             child: const Icon(
                               CupertinoIcons.cart_badge_minus,
@@ -171,7 +171,7 @@ bool? _isInWishlist = WishlistProvider.getWishlistItems.containsKey(currentProdu
                           ),
                          HeartBTN(productId: currentProduct.id, isInwishlist: _isInWishlist),
                           TextWidget(
-                            text: '\$${realPrice.toStringAsFixed(2)}',
+                            text: '\$${(realPrice*int.parse(_quantityTextController.text)).toStringAsFixed(2)}',
                             color: color,
                             textSize: 18,
                             maxLines: 1,

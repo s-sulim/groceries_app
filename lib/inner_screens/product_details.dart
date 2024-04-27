@@ -1,13 +1,16 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:groceries_app/consts/firebase_consts.dart';
 import 'package:groceries_app/models/products_model.dart';
 import 'package:groceries_app/providers/cart_provider.dart';
 import 'package:groceries_app/providers/products_provider.dart' as pp;
 import 'package:groceries_app/providers/viewed_provider.dart';
 import 'package:groceries_app/providers/wishlist_provider.dart' as wp;
+import 'package:groceries_app/services/global_methods.dart';
 import 'package:groceries_app/widgets/heart_btn.dart';
 import 'package:provider/provider.dart';
 
@@ -276,11 +279,18 @@ bool? _isInWishlist = WishlistProvider.getWishlistItems.containsKey(currentProdu
                             color: Colors.green,
                             borderRadius: BorderRadius.circular(10),
                             child: InkWell(
-                              onTap: () {
+                              onTap: () async {
                                 if  (_isInCart){
                                     return;
                                   }
-                                  cartProvider.addToCart(productId: currentProduct.id, quantity: int.parse(_quantityTextController.text));
+                                   final User? user = authInstance.currentUser;
+                                  if (user == null){
+                                    GlobalMethods.errorDialog(subtitle: 'To do this, you will have to login first!', context: context);
+                                    return;
+                                  }
+                                  await GlobalMethods.addToCart(productId: currentProduct.id, quantity: int.parse(_quantityTextController.text), context: context);
+                                  await cartProvider.fetchCart();
+                                  // cartProvider.addToCart(productId: currentProduct.id, quantity: int.parse(_quantityTextController.text));
                               },
                               borderRadius: BorderRadius.circular(10),
                               child: Padding(

@@ -1,12 +1,15 @@
 
 
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:groceries_app/consts/firebase_consts.dart';
 import 'package:groceries_app/inner_screens/product_details.dart';
 import 'package:groceries_app/models/products_model.dart';
 import 'package:groceries_app/providers/cart_provider.dart' as cp;
 import 'package:groceries_app/providers/wishlist_provider.dart' as wp;
+import 'package:groceries_app/services/global_methods.dart';
 import 'package:groceries_app/services/utils.dart';
 import 'package:groceries_app/widgets/heart_btn.dart';
 import 'package:groceries_app/widgets/text_widget.dart';
@@ -70,8 +73,15 @@ bool? _isInWishlist = WishlistProvider.getWishlistItems.containsKey(productModel
                         Row(
                           children: [
                             GestureDetector(
-                              onTap: () {
-                                    CartProvider.addToCart(productId: productModel.id, quantity: 1);
+                              onTap: () async {
+                                 final User? user = authInstance.currentUser;
+                                  if (user == null){
+                                    GlobalMethods.errorDialog(subtitle: 'To do this, you will have to login first!', context: context);
+                                    return;
+                                  }
+                                  await GlobalMethods.addToCart(productId: productModel.id, quantity: 1, context: context);
+                                   await CartProvider.fetchCart();
+                                  // CartProvider.addToCart(productId: productModel.id, quantity: 1);
                               },
                               child: Icon(
                                 _isInCart ?IconlyBold.bag2 :   IconlyLight.bag2,

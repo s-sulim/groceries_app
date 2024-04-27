@@ -1,8 +1,10 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:groceries_app/consts/firebase_consts.dart';
 import 'package:groceries_app/inner_screens/product_details.dart';
 import 'package:groceries_app/models/products_model.dart';
 import 'package:groceries_app/providers/cart_provider.dart' as cp;
@@ -64,6 +66,7 @@ class _FeedsWidgetState extends State<FeedsWidget> {
               height: size.width * 0.21,
               width: size.width * 0.2,
               boxFit: BoxFit.fill,
+              
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -148,17 +151,27 @@ class _FeedsWidgetState extends State<FeedsWidget> {
             SizedBox(
               width: double.infinity,
               child: TextButton(
-                onPressed: () {
+                onPressed: () async {
                   if  (_isInCart){
                     return;
                   }
-                  CartProvider.addToCart(productId: productModel.id, quantity: int.parse(_quantityTextController.text));
+                   final User? user = authInstance.currentUser;
+                  if (user == null){
+                    GlobalMethods.errorDialog(subtitle: 'To do this, you will have to login first!', context: context);
+                    return;
+                  }
+                  await GlobalMethods.addToCart(productId: productModel.id, quantity: int.parse(_quantityTextController.text), context: context);
+                  await CartProvider.fetchCart();
+                  // CartProvider.addToCart(productId: productModel.id, quantity: int.parse(_quantityTextController.text));
                 },
-                child: TextWidget(
-                  text: _isInCart ? 'In cart' : 'Add to cart',
-                  maxLines: 1,
-                  color: color,
-                  textSize: 20,
+                child: Flexible(
+                  flex: 3,
+                  child: TextWidget(
+                    text: _isInCart ? 'In cart' : 'Add to cart',
+                    maxLines: 1,
+                    color: color,
+                    textSize: 20,
+                  ),
                 ),
                 style: ButtonStyle(
                     backgroundColor:

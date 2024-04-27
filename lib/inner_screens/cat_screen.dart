@@ -22,6 +22,7 @@ class CategoryScreen extends StatefulWidget {
 
 class _CategoryScreenState extends State<CategoryScreen> {
   final TextEditingController? _searchTextController = TextEditingController();
+  List<ProductModel> listProductSearch =[];
   final FocusNode _searchTextFocusNode = FocusNode();
   @override
   void dispose() {
@@ -64,7 +65,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       focusNode: _searchTextFocusNode,
                       controller: _searchTextController,
                       onChanged: (valuee) {
-                        setState(() {});
+                        setState(() {
+                          listProductSearch = productProviders.searchQuery(valuee);
+                        });
                       },
                       decoration: InputDecoration(
                         focusedBorder: OutlineInputBorder(
@@ -95,16 +98,20 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     ),
                   ),
                 ),
-                GridView.count(
+             _searchTextController!.text.isNotEmpty && listProductSearch.isEmpty  ? 
+             const EmptyProdWidget(text: 'No products found') : GridView.count(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   crossAxisCount: 2,
                   padding: EdgeInsets.zero,
                   // crossAxisSpacing: 10,
                   childAspectRatio: size.width / (size.height * 0.59),
-                  children: List.generate(productByCat.length, (index) {
+                  children: List.generate(
+                    
+                       _searchTextController!.text.isNotEmpty ? listProductSearch.length :
+                    productByCat.length, (index) {
                     return ChangeNotifierProvider.value(
-                      value: productByCat[index],
+                      value:     _searchTextController!.text.isNotEmpty ? listProductSearch[index]  :productByCat[index],
                       child: const FeedsWidget(),
                     );
                   }),

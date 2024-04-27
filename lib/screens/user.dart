@@ -1,8 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:groceries_app/consts/firebase_consts.dart';
 import 'package:groceries_app/provider/dark_theme_provider.dart';
+import 'package:groceries_app/screens/auth/forgot_password_screen.dart';
+import 'package:groceries_app/screens/auth/login_screen.dart';
+import 'package:groceries_app/screens/loading_manager.dart';
 import 'package:groceries_app/screens/orders/orders_screen.dart';
 import 'package:groceries_app/screens/viewed_recently/viewed_screen.dart';
 import 'package:groceries_app/screens/wishlist/wishlist_screen.dart';
@@ -11,27 +17,75 @@ import 'package:groceries_app/widgets/text_widget.dart';
 import 'package:provider/provider.dart';
 
 class UserScreen extends StatefulWidget {
-  const UserScreen({super.key});
+  const UserScreen({Key? key}) : super(key: key);
 
   @override
   State<UserScreen> createState() => _UserScreenState();
 }
 
 class _UserScreenState extends State<UserScreen> {
-  final TextEditingController _addressTextController = TextEditingController();
-
+  final TextEditingController _addressTextController =
+      TextEditingController(text: "");
   @override
   void dispose() {
-   _addressTextController.dispose();
+    _addressTextController.dispose();
     super.dispose();
   }
+
+  String? _email;
+  String? _name;
+  String? address;
+  bool _isLoading = false;
+  final User? user = authInstance.currentUser;
+  @override
+  void initState() {
+    getUserData();
+    super.initState();
+  }
+
+  Future<void> getUserData() async {
+    setState(() {
+      _isLoading = true;
+    });
+    if (user == null) {
+      setState(() {
+        _isLoading = false;
+      });
+      return;
+    }
+    try {
+      String _uid = user!.uid;
+
+      final DocumentSnapshot userDoc =
+          await FirebaseFirestore.instance.collection('users').doc(_uid).get();
+      if (userDoc == null) {
+        return;
+      } else {
+        _email = userDoc.get('email');
+        _name = userDoc.get('name');
+        address = userDoc.get('shipping-address');
+        _addressTextController.text = userDoc.get('shipping-address');
+      }
+    } catch (error) {
+      setState(() {
+        _isLoading = false;
+      });
+      GlobalMethods.errorDialog(subtitle: '$error', context: context);
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-
-     final themeState = Provider.of<DarkThemeProvider>(context);
-    final Color themeColor = themeState.getDarkTheme ? Colors.white : Colors.black;
+    final themeState = Provider.of<DarkThemeProvider>(context);
+    final Color color = themeState.getDarkTheme ? Colors.white : Colors.black;
     return Scaffold(
-      body: Center(
+        body: LoadingManager(
+      isLoading: _isLoading,
+      child: Center(
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -39,104 +93,241 @@ class _UserScreenState extends State<UserScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                RichText(text: TextSpan(
-                  text: 'Здоров, ',
-                   style: const TextStyle(color: Colors.cyan, fontSize: 27, fontWeight: FontWeight.bold), 
-                   recognizer: TapGestureRecognizer()..onTap = (){print('User name pressed');},
-                children:  <TextSpan>[
-                   TextSpan(text: "як ся маєш??", style: TextStyle(color: themeColor, fontSize: 27, fontWeight: FontWeight.w600)),
-                ]
-                )
+                const SizedBox(
+                  height: 15,
                 ),
-                   const SizedBox(height: 5),
-                TextWidget(color: themeColor, text: 'test@gmail.com', textSize: 18, isTitle: false),
-                const SizedBox(height: 20),
-                const Divider(thickness: 2),
-                const SizedBox(height: 20),
-                _addListTile(title: 'Address', subtitle: 'My account', icon:IconlyLight.profile, color: themeColor, onPressed: () async{
-                  await _showEditUserDataDialog();
-                }),
-
-                _addListTile(title: 'Orders', icon:IconlyLight.wallet,color: themeColor, onPressed: (){
-                  GlobalMethods.navigateTo(ctx: context, routeName: OrdersScreen.routeName);
-                }),
-
-                _addListTile(title: 'Wishlist', icon:IconlyLight.heart,color: themeColor, onPressed: (){
-                  
-                  GlobalMethods.navigateTo(ctx: context, routeName: WishlistScreen.routeName);
-                }),
-
-                _addListTile(title: 'Viewed', icon:IconlyLight.discovery,color: themeColor, onPressed: (){
-                        GlobalMethods.navigateTo(ctx: context, routeName: ViewedRecentlyScreen.routeName);
-
-                }),
-
-                _addListTile(title: 'Forgot my password', icon:IconlyLight.unlock,color: themeColor, onPressed: (){}),
-            
+                RichText(
+                  text: TextSpan(
+                    text: 'Hi,  ',
+                    style: const TextStyle(
+                      color: Colors.cyan,
+                      fontSize: 27,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: _name == null ? 'user' : _name,
+                          style: TextStyle(
+                            color: color,
+                            fontSize: 25,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              print('My name is pressed');
+                            }),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                TextWidget(
+                  text: _email == null ? 'Email' : _email!,
+                  color: color,
+                  textSize: 18,
+                  // isTitle: true,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                const Divider(
+                  thickness: 2,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                _listTiles(
+                  title: 'Address 2',
+                  subtitle: address,
+                  icon: IconlyLight.profile,
+                  onPressed: () async {
+                    await _showAddressDialog();
+                  },
+                  color: color,
+                ),
+                _listTiles(
+                  title: 'Orders',
+                  icon: IconlyLight.bag,
+                  onPressed: () {
+                    GlobalMethods.navigateTo(
+                        ctx: context, routeName: OrdersScreen.routeName);
+                  },
+                  color: color,
+                ),
+                _listTiles(
+                  title: 'Wishlist',
+                  icon: IconlyLight.heart,
+                  onPressed: () {
+                    GlobalMethods.navigateTo(
+                        ctx: context, routeName: WishlistScreen.routeName);
+                  },
+                  color: color,
+                ),
+                _listTiles(
+                  title: 'Viewed',
+                  icon: IconlyLight.show,
+                  onPressed: () {
+                    GlobalMethods.navigateTo(
+                        ctx: context,
+                        routeName: ViewedRecentlyScreen.routeName);
+                  },
+                  color: color,
+                ),
+                _listTiles(
+                  title: 'Forget password',
+                  icon: IconlyLight.unlock,
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const ForgetPasswordScreen(),
+                      ),
+                    );
+                  },
+                  color: color,
+                ),
                 SwitchListTile(
-                   title: TextWidget(color: themeColor, text: 'Theme', textSize: 22, isTitle: true,),
-            
-                  // title: Text('Theme', style:   TextStyle(fontSize: 24, fontWeight:FontWeight.bold ,color: themeState.getDarkTheme ? Colors.white38 : Colors.black38)),
-                  secondary: Icon(themeState.getDarkTheme ? Icons.dark_mode_outlined : Icons.light_mode_outlined, color: themeColor),
-                  onChanged: (bool value){
+                  title: TextWidget(
+                    text: themeState.getDarkTheme ? 'Dark mode' : 'Light mode',
+                    color: color,
+                    textSize: 18,
+                    // isTitle: true,
+                  ),
+                  secondary: Icon(themeState.getDarkTheme
+                      ? Icons.dark_mode_outlined
+                      : Icons.light_mode_outlined),
+                  onChanged: (bool value) {
                     setState(() {
                       themeState.setDarkTheme = value;
                     });
-                    },
-                value: themeState.getDarkTheme
+                  },
+                  value: themeState.getDarkTheme,
                 ),
-            
-                _addListTile(title: 'Logout', icon:IconlyLight.logout, color: themeColor, onPressed: ()async{
-                 GlobalMethods.warningDialog(title: 'Log out', subtitle: 'Are you sure you want to log out?', fct: (){}, context: context);
-                })
-                 
+                _listTiles(
+                  title: user == null ? 'Login' : 'Logout',
+                  icon: user == null ? IconlyLight.login : IconlyLight.logout,
+                  onPressed: () {
+                    if (user == null) {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const LoginScreen(),
+                        ),
+                      );
+                      return;
+                    }
+                    GlobalMethods.warningDialog(
+                        title: 'Sign out',
+                        subtitle: 'Do you wanna sign out?',
+                        fct: () async {
+                          await authInstance.signOut();
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const LoginScreen(),
+                            ),
+                          );
+                        },
+                        context: context);
+                  },
+                  color: color,
+                ),
+                // listTileAsRow(),
               ],
             ),
           ),
         ),
-      )
+      ),
+    ));
+  }
+
+  Future<void> _showAddressDialog() async {
+    await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Update'),
+            content: TextField(
+              // onChanged: (value) {
+              //   print('_addressTextController.text ${_addressTextController.text}');
+              // },
+              controller: _addressTextController,
+              maxLines: 5,
+              decoration: const InputDecoration(hintText: "Your address"),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  String _uid = user!.uid;
+                  try {
+                    await FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(_uid)
+                        .update({
+                      'shipping-address': _addressTextController.text,
+                    });
+
+                    Navigator.pop(context);
+                    setState(() {
+                      address = _addressTextController.text;
+                    });
+                  } catch (err) {
+                    GlobalMethods.errorDialog(
+                        subtitle: err.toString(), context: context);
+                  }
+                },
+                child: const Text('Update'),
+              ),
+            ],
+          );
+        });
+  }
+
+  Widget _listTiles({
+    required String title,
+    String? subtitle,
+    required IconData icon,
+    required Function onPressed,
+    required Color color,
+  }) {
+    return ListTile(
+      title: TextWidget(
+        text: title,
+        color: color,
+        textSize: 22,
+        // isTitle: true,
+      ),
+      subtitle: TextWidget(
+        text: subtitle == null ? "" : subtitle,
+        color: color,
+        textSize: 18,
+      ),
+      leading: Icon(icon),
+      trailing: const Icon(IconlyLight.arrowRight2),
+      onTap: () {
+        onPressed();
+      },
     );
   }
-Future <void> _showEditUserDataDialog() async{
-await showDialog(context: context, builder: (context){
-                      return  AlertDialog(
-                        title: const Text('Update your data'),
-                        content: TextField(
-                          onChanged: (value){
-                            // print('_addressTextController.text ${_addressTextController.text}');
-                          },
-                          controller: _addressTextController,
-                          maxLines: 1,
-                          decoration: const InputDecoration(hintText: "Your address"),),
-                     
-                     actions: [
-                      TextButton(onPressed: (){}, child: const Text('Submit'),)
-                     ], );
-                    });
+
+// // Alternative code for the listTile.
+//   Widget listTileAsRow() {
+//     return Padding(
+//       padding: const EdgeInsets.all(8.0),
+//       child: Row(
+//         children: <Widget>[
+//           const Icon(Icons.settings),
+//           const SizedBox(width: 10),
+//           Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: const [
+//               Text('Title'),
+//               Text('Subtitle'),
+//             ],
+//           ),
+//           const Spacer(),
+//           const Icon(Icons.chevron_right)
+//         ],
+//       ),
+//     );
+//   }
 }
 
-  Widget _addListTile({required String title, String? subtitle, required IconData icon, required Color color, required Function onPressed}){
-  if  (subtitle != null){
-    return ListTile(
-            title: TextWidget(color: color, text: title, textSize: 22, isTitle: true,),
-            subtitle: TextWidget(color: color,
-              text: subtitle, textSize: 18,),
-            leading: Icon(icon, color:color),
-            trailing: Icon(IconlyLight.arrowRight2, color: color),
-            onTap: (){
-              onPressed();
-            }
-          );
-  }
-  else{
-    return ListTile(
-            title: TextWidget(color: color, text: title, textSize: 22, isTitle: true,),
-            leading: Icon(icon, color:color),
-            trailing: Icon(IconlyLight.arrowRight2, color: color),
-            onTap: (){
-              onPressed();
-            }
-          );
-     }
-  }
-}

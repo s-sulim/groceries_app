@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:groceries_app/providers/cart_provider.dart';
 import 'package:groceries_app/providers/cart_provider.dart' as cp;
+import 'package:groceries_app/providers/products_provider.dart';
 import 'package:groceries_app/screens/cart/cart_widget.dart';
 import 'package:groceries_app/widgets/empty.dart';
 import 'package:groceries_app/services/global_methods.dart';
@@ -26,6 +27,7 @@ class CartScreen extends StatelessWidget {
     // ignore: dead_code
     ) : Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
           elevation: 0,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           title: TextWidget(
@@ -37,8 +39,9 @@ class CartScreen extends StatelessWidget {
           actions: [
             IconButton(
               onPressed: () {
-                GlobalMethods.warningDialog(title: 'Empty your cart?', subtitle: 'U sure?', fct: (){
-                  cartProvider.clear();
+                GlobalMethods.warningDialog(title: 'Empty your cart?', subtitle: 'U sure?', fct: () async{
+                  await cartProvider.clearOnlineCart();
+                  cartProvider.clearLocalCart();
                 }, context: context);
               },
               icon: Icon(
@@ -68,6 +71,13 @@ class CartScreen extends StatelessWidget {
   Widget _checkout({required BuildContext ctx}) {
     final Color color = Utils(ctx).color;
     Size size = Utils(ctx).getScreenSize;
+   final cartProvider = Provider.of<cp.CartProvider>(ctx);
+   final productProvider = Provider.of<ProductsProvider>(ctx);
+   double total = 0.0;
+   cartProvider.getCartItems.forEach((key, value){
+      var currentProduct = productProvider.findById(value.productId);
+      total += (currentProduct.isOnSale ? currentProduct.salePrice : currentProduct.price) * value.quantity;
+   });
     return SizedBox(
       width: double.infinity,
       height: size.height * 0.1,
@@ -92,7 +102,7 @@ class CartScreen extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          FittedBox(child: TextWidget(text: 'Total: \$0.259', color: color, textSize: 18, isTitle: true,))
+          FittedBox(child: TextWidget(text: 'Total: \$${total.toStringAsFixed(2)}', color: color, textSize: 18, isTitle: true,))
         ]),
       ),
     );

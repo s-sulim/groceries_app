@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:groceries_app/consts/firebase_consts.dart';
 import 'package:groceries_app/consts/theme_data.dart';
+import 'package:groceries_app/fetch_screen.dart';
 import 'package:groceries_app/inner_screens/cat_screen.dart';
 import 'package:groceries_app/inner_screens/feeds_screen.dart';
 import 'package:groceries_app/inner_screens/on_sale_screen.dart';
@@ -93,7 +94,7 @@ class _MyAppState extends State<MyApp> {
                   debugShowCheckedModeBanner: false,
                   title: 'Flutter Demo',
                   theme: Styles.themeData(themeProvider.getDarkTheme, context),
-                  home: const LoginScreen(),
+                  home: const FetchScreen(),
                   routes: {
                     OnSaleScreen.routeName: (ctx) => const OnSaleScreen(),
                     FeedsScreen.routeName: (ctx) => const FeedsScreen(),
