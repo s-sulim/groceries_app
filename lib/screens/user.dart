@@ -5,7 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:groceries_app/consts/firebase_consts.dart';
-import 'package:groceries_app/provider/dark_theme_provider.dart';
+import 'package:groceries_app/providers/dark_theme_provider.dart';
 import 'package:groceries_app/screens/auth/forgot_password_screen.dart';
 import 'package:groceries_app/screens/auth/login_screen.dart';
 import 'package:groceries_app/screens/loading_manager.dart';

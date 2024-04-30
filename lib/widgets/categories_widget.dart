@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:groceries_app/inner_screens/cat_screen.dart';
-import 'package:groceries_app/provider/dark_theme_provider.dart';
+import 'package:groceries_app/providers/dark_theme_provider.dart';
 import 'package:groceries_app/widgets/text_widget.dart';
 import 'package:provider/provider.dart';
 

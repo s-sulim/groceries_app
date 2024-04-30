@@ -7,8 +7,9 @@ import 'package:groceries_app/inner_screens/cat_screen.dart';
 import 'package:groceries_app/inner_screens/feeds_screen.dart';
 import 'package:groceries_app/inner_screens/on_sale_screen.dart';
 import 'package:groceries_app/inner_screens/product_details.dart';
-import 'package:groceries_app/provider/dark_theme_provider.dart';
+import 'package:groceries_app/providers/dark_theme_provider.dart';
 import 'package:groceries_app/providers/cart_provider.dart';
+import 'package:groceries_app/providers/orders_provider.dart';
 import 'package:groceries_app/providers/products_provider.dart';
 import 'package:groceries_app/providers/viewed_provider.dart';
 import 'package:groceries_app/providers/wishlist_provider.dart';
@@ -86,6 +87,9 @@ class _MyAppState extends State<MyApp> {
               ),
               ChangeNotifierProvider(
                 create: (_) => ViewedProdProvider(),
+              ),
+              ChangeNotifierProvider(
+              create: (_) => OrdersProvider(),
               ),
             ],
             child: Consumer<DarkThemeProvider>(
